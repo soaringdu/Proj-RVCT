@@ -1,0 +1,25 @@
+
+fa_path=getDirectory("image");
+file_name=getTitle();
+name=substring(file_name, 0, lengthOf(file_name)-4);
+rename("raw");
+run("Z Project...", "projection=[Average Intensity]");
+run("Enhance Contrast", "saturated=0.35");
+rename("zpro");
+inter=Stack.getFrameInterval();
+roiManager ("Reset"); 
+waitForUser("circle the ROIs");
+roiManager("Save", fa_path+name+".zip");
+selectWindow("zpro");
+roiManager("Show All with labels");
+//run("Enhance Contrast", "saturated=0.35");
+saveAs("Tiff",fa_path+"AVG_"+name+".tif");
+run("Set Measurements...", "area mean redirect=None decimal=8");
+selectWindow("raw");
+//run("Set Measurements...", "area centroid center redirect=None decimal=8");
+roiManager("Show All");
+roiManager("Multi Measure");
+saveAs("Results", fa_path+name+"_"+inter+".csv");
+roiManager ("Reset"); 
+run("Clear Results");
+close("*");
